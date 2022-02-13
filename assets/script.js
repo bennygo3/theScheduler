@@ -40,69 +40,50 @@ var time = function(){
 // will check the current time every minute
 setInterval(time(), (1000 * 60) * 1);
 
+// takes text input from each html row and adds it to an array for local storage
+const addToDo = (e) => {
+    var myToDoArray = [];
 
+    var timeBlockText= document.querySelectorAll(
+    ".row"
+    );
 
-
-// saves to do text to local storage
-// function saveText(){
-//     var timeBlockEl = $(".textarea");
-//     localStorage.setItem("textSaved", JSON.stringify(timeBlockEl));
-//     console.log(timeBlockEl);
-// }
-var myToDo = [];
-var timeBlockText= document.querySelectorAll('.textarea');
-var myToDoArray = [];
-
-function renderSaved(){
-    $(".saveBtn").on("click", function(event){
-    event.preventDefault();
-    // var myToDoArray = [];
-    var btnSaved= $(this).siblings(".textarea");
-    // var btnVal = myToDo;
-    console.log(btnSaved.val());
-
-    $(".textarea").each(function(){
-        myToDoArray.push($(this).val());
-    })
-
+    timeBlockText.forEach(function (element){
+        myToDoArray.push({
+            hour: element.id,
+            text: element.querySelector(".textarea").value
+        });
+    });
     console.log(myToDoArray);
+    localStorage.setItem("toDos", JSON.stringify(myToDoArray));
+};
+
+
+document.querySelectorAll(".saveBtn").forEach(function (btn){
+    btn.addEventListener("click", addToDo);
+});
+
+// recalls local storage and prevents the input text from being erased after reloading or exiting the program
+var savedRecall = JSON.parse(localStorage.getItem("toDos"));
+if (savedRecall) {
     
-    localStorage.setItem('myToDo', JSON.stringify(myToDoArray));
- });
- 
-}
-
-
-
-
-
-function init() {
-    var cachedToDos = JSON.parse(localStorage.getItem("myToDo"));
+    savedRecall.forEach(function (item){
+        document
+         .querySelector("#" + item.hour)
+         .querySelector(".textarea").value = item.text;
+    });
     
-    if (cachedToDos !== null){
-        myToDoArray = cachedToDos;
-    }
-    renderSaved();
-}
-
-init();
-
-// $(".saveBtn").on("click", function(event){
-//     event.preventDefault();
-//     saveText();
-// });
+};
 
 
 
-// var textArray = [];
 
-// localStorage.setItem('myToDo', JSON.stringify(timeBlockEl.value));
-// var textRecall = JSON.parse(localStorage.getItem('myToDo'));
 
-// e.preventDefault();
 
-// textArray.push(timeBlockEl.value);
-// localStorage.setItem('myToDo', JSON.stringify(textArray));
+    
+
+
+
 
 
 
